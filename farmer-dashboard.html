@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard - ShambaSphere</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <header>
+        <div class="logo">ShambaSphere</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Marketplace</a></li>
+                <li><a href="#add-produce-section">Add Produce</a></li>
+                <li><a href="#my-produce">My Listings</a></li>
+                <li><a href="#orders-section">Orders</a></li>
+                <li><a href="#">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Dashboard Stats -->
+    <section class="dashboard-stats" id="dashboard-stats">
+        <h2>Dashboard Stats</h2>
+        <div class="stats-container">
+            <div class="stat">
+                <h3 id="total-listings">0</h3>
+                <p>Total Listings</p>
+            </div>
+            <div class="stat">
+                <h3 id="total-orders">0</h3>
+                <p>Total Orders</p>
+            </div>
+            <div class="stat">
+                <h3 id="total-income">KSh 0</h3>
+                <p>Estimated Income</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Produce Section -->
+    <section class="add-produce-section" id="add-produce-section">
+        <h2>Add New Produce</h2>
+        <form id="add-produce-form">
+            <input type="text" placeholder="Produce Name" required>
+            <input type="number" placeholder="Quantity (kg)" required>
+            <input type="number" placeholder="Price per kg (KSh)" required>
+            <input type="text" placeholder="Image URL (optional)">
+            <button type="submit">Add Produce</button>
+        </form>
+    </section>
+
+    <!-- My Listings -->
+    <section class="my-produce" id="my-produce">
+        <h2>My Listings</h2>
+        <div id="produce-list"></div>
+    </section>
+
+    <!-- Orders Section -->
+    <section class="orders-section" id="orders-section">
+        <h2>Orders Received</h2>
+        <div id="orders-list">
+            <p>No orders yet.</p>
+        </div>
+    </section>
+
+    <!-- Marketplace Preview -->
+    <section class="marketplace" id="marketplace">
+        <h2>Marketplace Preview</h2>
+        <div id="marketplace-list"></div>
+    </section>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
