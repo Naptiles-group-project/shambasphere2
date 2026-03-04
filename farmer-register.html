@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmer Register - ShambaSphere</title>
+<link rel="stylesheet" href="farmer-register.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Farmer Registration</h1>
+
+    <form id="farmerForm">
+
+        <!-- Personal Information -->
+        <section>
+            <h2>Personal Information</h2>
+            <div class="grid">
+                <input type="text" id="firstName" placeholder="First Name" required>
+                <input type="text" id="lastName" placeholder="Last Name" required>
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="tel" id="phone" placeholder="Phone Number" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="email" id="confirmEmail" placeholder="Confirm Email" required>
+            </div>
+
+            <select id="county" required>
+                <option value="">Select County</option>
+                <option>Nairobi</option>
+                <option>Mombasa</option>
+                <option>Kisumu</option>
+                <option>Nakuru</option>
+                <option>Kiambu</option>
+                <option>Uasin Gishu</option>
+                <option>Kakamega</option>
+                <option>Machakos</option>
+                <option>Meru</option>
+                <option>Nyeri</option>
+            </select>
+
+            <input type="file" id="profilePic" accept="image/*">
+            <img id="previewImage" class="preview" />
+        </section>
+
+        <!-- Farm Details -->
+        <section>
+            <h2>Farm Details</h2>
+            <div class="grid">
+                <input type="text" id="farmName" placeholder="Farm Name" required>
+
+                <select id="farmingType" required>
+                    <option value="">Type of Farming</option>
+                    <option>Crop Farming</option>
+                    <option>Livestock</option>
+                    <option>Mixed Farming</option>
+                    <option>Horticulture</option>
+                    <option>Poultry</option>
+                </select>
+
+                <input type="number" id="farmSize" placeholder="Farm Size (Acres)" required>
+                <input type="number" id="experience" placeholder="Years of Experience" required>
+            </div>
+
+            <textarea id="farmDescription" placeholder="Describe your farm..." rows="4"></textarea>
+        </section>
+
+        <!-- Produce Categories -->
+        <section>
+            <h2>Produce Categories</h2>
+            <div class="checkbox-group">
+                <label><input type="checkbox" value="Vegetables"> Vegetables</label>
+                <label><input type="checkbox" value="Fruits"> Fruits</label>
+                <label><input type="checkbox" value="Grains"> Grains</label>
+                <label><input type="checkbox" value="Dairy"> Dairy</label>
+                <label><input type="checkbox" value="Poultry"> Poultry</label>
+                <label><input type="checkbox" value="Livestock"> Livestock</label>
+            </div>
+        </section>
+
+        <!-- Availability -->
+        <section>
+            <h2>Availability</h2>
+            <select id="activeStatus" required>
+                <option value="">Currently Active?</option>
+                <option>Yes</option>
+                <option>No</option>
+            </select>
+
+            <select id="harvestSeason" required>
+                <option value="">Harvest Season</option>
+                <option>All Year</option>
+                <option>Seasonal</option>
+            </select>
+
+            <select id="delivery" required>
+                <option value="">Delivery Available?</option>
+                <option>Yes</option>
+                <option>No</option>
+            </select>
+        </section>
+
+        <!-- Security -->
+        <section>
+            <h2>Security</h2>
+            <input type="password" id="password" placeholder="Password" required>
+            <div class="strength-meter">
+                <div id="strengthBar"></div>
+            </div>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+
+            <label class="terms">
+                <input type="checkbox" required> I agree to Terms & Conditions
+            </label>
+        </section>
+
+        <button type="submit" class="submit-btn">Register</button>
+
+    </form>
+</div>
+
+<script src="farmer-register.js"></script>
+</body>
+</html>
