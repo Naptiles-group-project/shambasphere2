@@ -1,61 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShambaSphere Marketplace</title>
-<link rel="stylesheet" href="marketplace.css">
+    <meta charset="UTF-8">
+    <title>ShambaSphere Marketplace</title>
+    <link rel="stylesheet" href="marketplace.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-<!-- NAVIGATION BAR -->
+<!-- ================= NAVBAR ================= -->
 <header class="navbar">
-    <div class="logo">ShambaSphere</div>
+    <div class="logo">🌾 ShambaSphere</div>
 
-    <nav>
-        <a href="#">Home</a>
-        <a href="#">Categories</a>
-        <a href="#">Farmers</a>
-        <a href="#">Advisory</a>
-        <a href="#">Contact</a>
-    </nav>
+    <input type="text" id="searchInput" placeholder="Search products...">
 
-    <div class="nav-right">
-        <input type="text" id="searchInput" placeholder="Search products...">
+    <div class="nav-actions">
         <div class="cart-icon" onclick="toggleCart()">
             🛒 <span id="cartCount">0</span>
         </div>
     </div>
 </header>
 
-<!-- HERO CAROUSEL -->
-<section class="carousel">
-    <div class="slides">
-        <div class="slide active">Fresh Farm Produce</div>
-        <div class="slide">Buy Direct from Farmers</div>
-        <div class="slide">Best Prices Guaranteed</div>
+<!-- ================= HERO ================= -->
+<section class="hero">
+    <h1>Fresh Farm Products Delivered to You</h1>
+    <p>Support Local Farmers. Buy Direct. Save More.</p>
+</section>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="main-container">
+
+    <!-- CATEGORY SIDEBAR -->
+    <aside class="sidebar">
+        <h3>Categories</h3>
+        <ul>
+            <li onclick="filterCategory('All')">All</li>
+            <li onclick="filterCategory('Vegetables')">Vegetables</li>
+            <li onclick="filterCategory('Fruits')">Fruits</li>
+            <li onclick="filterCategory('Grains')">Grains</li>
+            <li onclick="filterCategory('Livestock')">Livestock</li>
+        </ul>
+    </aside>
+
+    <!-- PRODUCTS -->
+    <section class="products-section">
+        <div class="products-grid" id="productsContainer">
+            <!-- Products Render Here -->
+        </div>
+    </section>
+
+</div>
+
+<!-- ================= CART SIDEBAR ================= -->
+<!-- ================= CART MODAL ================= -->
+<div class="cart-modal" id="cartModal">
+    <div class="cart-card">
+        <span class="close-cart" onclick="toggleCart()">×</span>
+        <h3>Your Cart</h3>
+
+        <div id="cartItems"></div>
+
+        <h4>Total: KSh <span id="cartTotal">0</span></h4>
+
+        <div class="cart-buttons">
+            <button onclick="clearCart()" class="clear-btn">Clear Cart</button>
+            <button onclick="cashout()" class="checkout-btn">Cashout</button>
+        </div>
     </div>
-</section>
-
-<!-- CATEGORIES -->
-<section class="categories">
-    <div class="category">🌽 Grains</div>
-    <div class="category">🥬 Vegetables</div>
-    <div class="category">🍎 Fruits</div>
-    <div class="category">🐄 Livestock</div>
-</section>
-
-<!-- PRODUCTS -->
-<section class="products-section">
-    <h2>Available Products</h2>
-    <div id="productsContainer" class="products-grid"></div>
-</section>
-
-<!-- CART SIDEBAR -->
-<div class="cart-sidebar" id="cartSidebar">
-    <h3>Your Cart</h3>
-    <div id="cartItems"></div>
-    <button onclick="checkout()">Checkout</button>
 </div>
 
 <script src="marketplace.js"></script>
