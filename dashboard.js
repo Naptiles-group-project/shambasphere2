@@ -1,162 +1,214 @@
-// Simulated multi-farmer data
+// ================= FARMERS DATA =================
 let farmers = [
     {
-        name: 'Farmer John',
+        name: "Farmer John",
         produce: [],
         orders: []
     },
     {
-        name: 'Farmer Mary',
+        name: "Farmer Mary",
         produce: [],
         orders: []
     }
 ];
 
-// Logged-in farmer index (simulate login)
-let loggedInFarmerIndex = 0; // Change to 1 for Farmer Mary
+// Simulate logged in farmer
+let loggedInFarmerIndex = 0;
+let currentEditIndex = null;
+let uploadedImageBase64 = "";
 
-// DOM Elements
-const addProduceForm = document.getElementById('add-produce-form');
-const produceList = document.getElementById('produce-list');
-const marketplaceList = document.getElementById('marketplace-list');
-const ordersList = document.getElementById('orders-list');
+// ================= DOM ELEMENTS =================
+const addProduceForm = document.getElementById("add-produce-form");
+const produceList = document.getElementById("produce-list");
+const marketplaceList = document.getElementById("marketplace-list");
+const ordersList = document.getElementById("orders-list");
 
-const totalListingsEl = document.getElementById('total-listings');
-const totalOrdersEl = document.getElementById('total-orders');
-const totalIncomeEl = document.getElementById('total-income');
+const imageUpload = document.getElementById("image-upload");
+const imagePreview = document.getElementById("image-preview");
 
-// ===== Add Produce =====
-addProduceForm.addEventListener('submit', (e) => {
+const totalListingsEl = document.getElementById("total-listings");
+const totalOrdersEl = document.getElementById("total-orders");
+const totalIncomeEl = document.getElementById("total-income");
+
+// ================= IMAGE PREVIEW =================
+imageUpload.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        uploadedImageBase64 = e.target.result;
+        imagePreview.src = uploadedImageBase64;
+        imagePreview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+});
+
+// ================= ADD PRODUCE =================
+addProduceForm.addEventListener("submit", function (e) {
     e.preventDefault();
+
     const name = addProduceForm[0].value;
     const quantity = parseFloat(addProduceForm[1].value);
     const price = parseFloat(addProduceForm[2].value);
-    const image = addProduceForm[3].value || 'https://via.placeholder.com/200x120.png?text=Produce';
 
-    const newProduce = {name, quantity, price, image};
+    const image = uploadedImageBase64 || 
+        "https://via.placeholder.com/200x120.png?text=Produce";
+
+    const status = quantity > 0 ? "Available" : "Sold";
+
+    const newProduce = { name, quantity, price, image, status };
+
     farmers[loggedInFarmerIndex].produce.push(newProduce);
 
     addProduceForm.reset();
+    imagePreview.style.display = "none";
+    uploadedImageBase64 = "";
+
     renderProduce();
     renderMarketplace();
     updateStats();
 });
 
-// ===== Render Farmer Listings =====
+// ================= RENDER FARMER PRODUCE =================
 function renderProduce() {
     const farmer = farmers[loggedInFarmerIndex];
-    produceList.innerHTML = '';
+    produceList.innerHTML = "";
+
     farmer.produce.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = 'produce-card';
+
+        item.status = item.quantity > 0 ? "Available" : "Sold";
+
+        const card = document.createElement("div");
+        card.className = "produce-card";
+
         card.innerHTML = `
+            <span class="status-badge ${item.status === "Available" ? "available" : "sold"}">
+                ${item.status}
+            </span>
             <img src="${item.image}" alt="${item.name}">
             <h4>${item.name}</h4>
             <p>Qty: ${item.quantity} kg</p>
             <p>Price: KSh ${item.price}/kg</p>
-            <button class="edit-btn" onclick="editProduce(${index})">Edit</button>
-            <button class="delete-btn" onclick="deleteProduce(${index})">Delete</button>
+            <button onclick="editProduce(${index})">Edit</button>
+            <button onclick="deleteProduce(${index})">Delete</button>
         `;
+
         produceList.appendChild(card);
     });
 }
 
-// ===== Render Marketplace =====
+// ================= RENDER MARKETPLACE =================
 function renderMarketplace() {
-    marketplaceList.innerHTML = '';
+    marketplaceList.innerHTML = "";
+
     farmers.forEach((farmer) => {
         farmer.produce.forEach((item) => {
-            const card = document.createElement('div');
-            card.className = 'produce-card';
+
+            item.status = item.quantity > 0 ? "Available" : "Sold";
+
+            const card = document.createElement("div");
+            card.className = "produce-card";
+
             card.innerHTML = `
+                <span class="status-badge ${item.status === "Available" ? "available" : "sold"}">
+                    ${item.status}
+                </span>
                 <img src="${item.image}" alt="${item.name}">
                 <h4>${item.name}</h4>
                 <p>Qty: ${item.quantity} kg</p>
                 <p>Price: KSh ${item.price}/kg</p>
                 <p><strong>Farmer:</strong> ${farmer.name}</p>
             `;
+
             marketplaceList.appendChild(card);
         });
     });
 }
 
-// ===== Render Orders =====
-function renderOrders() {
-    const farmer = farmers[loggedInFarmerIndex];
-    ordersList.innerHTML = '';
-    if(farmer.orders.length === 0){
-        ordersList.innerHTML = '<p>No orders yet.</p>';
-        return;
-    }
-    farmer.orders.forEach((order, index) => {
-        const card = document.createElement('div');
-        card.className = 'order-card';
-        card.innerHTML = `
-            <p><strong>Produce:</strong> ${order.produceName}</p>
-            <p><strong>Quantity:</strong> ${order.quantity} kg</p>
-            <p><strong>Price per kg:</strong> KSh ${order.price}</p>
-            <p><strong>Buyer:</strong> ${order.buyerName || 'Anonymous'}</p>
-            <p><strong>Status:</strong> ${order.status}</p>
-            ${order.status === 'Pending' ? `<button class="accept-btn" onclick="acceptOrder(${index})">Accept</button>
-            <button class="reject-btn" onclick="rejectOrder(${index})">Reject</button>` : ''}
-        `;
-        ordersList.appendChild(card);
-    });
-}
-
-// ===== Accept / Reject Orders =====
-function acceptOrder(index) {
-    farmers[loggedInFarmerIndex].orders[index].status = 'Accepted';
-    renderOrders();
-    updateStats();
-}
-
-function rejectOrder(index) {
-    farmers[loggedInFarmerIndex].orders[index].status = 'Rejected';
-    renderOrders();
-    updateStats();
-}
-
-// ===== Edit / Delete Produce =====
+// ================= OPEN EDIT MODAL =================
 function editProduce(index) {
+    currentEditIndex = index;
+
     const farmer = farmers[loggedInFarmerIndex];
     const item = farmer.produce[index];
-    const newName = prompt("Edit Produce Name:", item.name) || item.name;
-    const newQuantity = prompt("Edit Quantity (kg):", item.quantity) || item.quantity;
-    const newPrice = prompt("Edit Price (KSh):", item.price) || item.price;
-    const newImage = prompt("Edit Image URL:", item.image) || item.image;
 
-    farmer.produce[index] = {name: newName, quantity: newQuantity, price: newPrice, image: newImage};
+    document.getElementById("editName").value = item.name;
+    document.getElementById("editQuantity").value = item.quantity;
+    document.getElementById("editPrice").value = item.price;
+    document.getElementById("editStatus").value = item.status;
+
+    document.getElementById("editModal").style.display = "block";
+}
+
+// ================= CLOSE MODAL =================
+function closeModal() {
+    document.getElementById("editModal").style.display = "none";
+}
+
+// ================= SAVE CHANGES =================
+function saveChanges() {
+    const farmer = farmers[loggedInFarmerIndex];
+    const item = farmer.produce[currentEditIndex];
+
+    const newName = document.getElementById("editName").value;
+    const newQuantity = parseFloat(document.getElementById("editQuantity").value);
+    const newPrice = parseFloat(document.getElementById("editPrice").value);
+    const newStatus = document.getElementById("editStatus").value;
+    const imageInput = document.getElementById("editImage");
+
+    item.name = newName;
+    item.quantity = newQuantity;
+    item.price = newPrice;
+    item.status = newStatus;
+
+    if (newStatus === "Sold") {
+        item.quantity = 0;
+    }
+
+    // If new image selected
+    if (imageInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            item.image = e.target.result;
+            refreshUI();
+        };
+        reader.readAsDataURL(imageInput.files[0]);
+    } else {
+        refreshUI();
+    }
+
+    closeModal();
+}
+
+// ================= DELETE PRODUCE =================
+function deleteProduce(index) {
+    if (confirm("Delete this produce?")) {
+        farmers[loggedInFarmerIndex].produce.splice(index, 1);
+        refreshUI();
+    }
+}
+
+// ================= UPDATE STATS =================
+function updateStats() {
+    const farmer = farmers[loggedInFarmerIndex];
+
+    totalListingsEl.innerText = farmer.produce.length;
+    totalOrdersEl.innerText = farmer.orders.length;
+
+    const income = farmer.orders
+        .filter(o => o.status === "Accepted")
+        .reduce((acc, o) => acc + (o.quantity * o.price), 0);
+
+    totalIncomeEl.innerText = `KSh ${income}`;
+}
+
+// ================= REFRESH EVERYTHING =================
+function refreshUI() {
     renderProduce();
     renderMarketplace();
     updateStats();
 }
 
-function deleteProduce(index) {
-    const farmer = farmers[loggedInFarmerIndex];
-    if(confirm("Are you sure you want to delete this produce?")) {
-        farmer.produce.splice(index,1);
-        renderProduce();
-        renderMarketplace();
-        renderOrders();
-        updateStats();
-    }
-}
-
-// ===== Dashboard Stats =====
-function updateStats() {
-    const farmer = farmers[loggedInFarmerIndex];
-    totalListingsEl.innerText = farmer.produce.length;
-    totalOrdersEl.innerText = farmer.orders.length;
-
-    const income = farmer.orders
-        .filter(o => o.status === 'Accepted')
-        .reduce((acc,o) => acc + (o.quantity*o.price), 0);
-    totalIncomeEl.innerText = `KSh ${income}`;
-}
-
-// Initial render
-renderProduce();
-renderMarketplace();
-renderOrders();
-updateStats();
+// ================= INITIAL LOAD =================
+refreshUI();
